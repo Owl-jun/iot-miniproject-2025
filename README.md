@@ -1,2 +1,8 @@
 # iot-miniproject-2025
-부경대 IoT 개발자 과정 미니프로젝트
+IoT 미니프로젝트
+
+## 미니프로젝트2
+[링크](./miniproject2/README.md)
+
+## 미니프로젝트3
+[링크](./miniproject3/README.md)
