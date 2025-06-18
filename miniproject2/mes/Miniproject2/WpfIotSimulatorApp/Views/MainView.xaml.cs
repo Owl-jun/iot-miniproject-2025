@@ -15,24 +15,17 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using WpfIotSimulatorApp.ViewModels;
 
 namespace WpfIotSimulatorApp.Views
 {
-    /// <summary>
-    /// MainView.xaml에 대한 상호 작용 논리
-    /// </summary>
     public partial class MainView : MetroWindow
     {
+        public bool isEnd;
+
         public MainView()
         {
             InitializeComponent();
-        }
-        //Timer timer = new Timer();
-        Stopwatch sw = new Stopwatch();
-
-        private void BtnTest_Click(object sender, RoutedEventArgs e)
-        {
-            StartHmiAni(); // Hmi 애니메이션 동작
         }
 
         private void StartSensorCheck()
@@ -46,37 +39,38 @@ namespace WpfIotSimulatorApp.Views
                     Duration = TimeSpan.FromSeconds(1),
                     AutoReverse = true
                 };
-                sa.Completed += (s, e) =>
+                isEnd = false;
+                sa.Completed += (async (s, e) =>
                 {
-                    Random rand = new Random();
-                    int result = rand.Next(3);
-                    List<SolidColorBrush> colors = new List<SolidColorBrush>();
-                    colors.Add(new SolidColorBrush(Colors.Green));
-                    colors.Add(new SolidColorBrush(Colors.Crimson));
-                    colors.Add(new SolidColorBrush(Colors.Black));
-                    Product.Fill = colors.ToArray()[result];
-                };
+                    isEnd = true;
+                    if (DataContext is MainViewModel vm)
+                    {
+                        vm.AnimationCompleted?.Invoke(); // ✅ 여기서 신호를 줘야 WaitFor가 끝남
+                    }
+                });
                 SortingSensor.BeginAnimation(OpacityProperty, sa);
 
             }));
         }
 
         // WPF상의 객체 애니메이션 추가
-        private void StartHmiAni()
+        public void StartHmiAni()
         {
             Product.Fill = new SolidColorBrush(Colors.Gray);
 
-            DoubleAnimation da = new DoubleAnimation();
-            da.From = 0;
-            da.To = 360;
-            da.Duration = TimeSpan.FromSeconds(3);  // Schedules 의 LoadTime 값이 들어와야함
+            DoubleAnimation da = new DoubleAnimation
+            { 
+                From = 0,
+                To = 360,
+                Duration = TimeSpan.FromSeconds(3)  // Schedules 의 LoadTime 값이 들어와야함
+            };
+
             RotateTransform rt = new RotateTransform();
             GearStart.RenderTransform = rt;
             GearStart.RenderTransformOrigin = new Point(0.5, 0.5);
             GearEnd.RenderTransform = rt;
             GearEnd.RenderTransformOrigin = new Point(0.5, 0.5);
 
-            // Window 콜백기반의 비동기 작업.
             da.Completed += (s, e) =>
             {
                 StartSensorCheck(); // 애니메이션 끝난 후 실행

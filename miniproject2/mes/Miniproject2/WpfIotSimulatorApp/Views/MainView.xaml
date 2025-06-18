@@ -15,8 +15,11 @@
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" FontSize="24" FontWeight="Bold" Content="IoT Sorting Simulator"/>
-
+        <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+            <Label Grid.Row="0" Grid.Column="0" FontSize="24" FontWeight="Bold" Content="IoT Sorting Simulator"/>
+            <Label Grid.Row="0" Grid.Column="0" FontSize="14" FontWeight="Bold" Content="{Binding LogText}" VerticalAlignment="Center"/>
+        </StackPanel>
+        
         <Grid Grid.Row="1" Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40"/>
@@ -26,7 +29,7 @@
 
 
             <StackPanel Grid.Row="0" Orientation="Horizontal">
-                <Button x:Name="BtnTest" Content="Test" Click="BtnTest_Click" />
+                <Button Content="Execute" Command="{Binding ExecuteCommand}" />
             </StackPanel>
 
             <Canvas Grid.Row="1">
@@ -34,7 +37,7 @@
                 <Image x:Name="GearEnd" Height="70" Width="100" Source="/Resources/gear.png" Canvas.Right="65" Canvas.Top="95" />
                 <Image x:Name="SortingSensor" Height="50" Width="100" Source="/Resources/sensor.png" Canvas.Right="90" HorizontalAlignment="Left" Canvas.Left="388" VerticalAlignment="Center" />
                 <Image x:Name="Belt" Height="92" Width="496" Source="/Resources/belt.png" Canvas.Bottom="5" Canvas.Left="52" Canvas.Top="85" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <Rectangle x:Name="Product" Height="30" Width="30" Stroke="Black" Fill="White" Canvas.Left="142" Canvas.Top="55" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <Rectangle x:Name="Product" Height="30" Width="30" Stroke="Black" Fill="{Binding ProductBrush, Mode=TwoWay}" Canvas.Left="142" Canvas.Top="55" HorizontalAlignment="Left" VerticalAlignment="Top" />
             </Canvas>
         </Grid>
     </Grid>

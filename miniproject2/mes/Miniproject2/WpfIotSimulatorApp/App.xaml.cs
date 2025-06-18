@@ -18,7 +18,7 @@ namespace WpfIotSimulatorApp
             {
                 DataContext = viewModel,
             };
-
+            viewModel.StartHmiRequested += view.StartHmiAni;
             view.ShowDialog();
         }
     }
