@@ -33,7 +33,6 @@ namespace WpfIotSimulatorApp.Views
         private void BtnTest_Click(object sender, RoutedEventArgs e)
         {
             StartHmiAni(); // Hmi 애니메이션 동작
-
         }
 
         private void StartSensorCheck()
@@ -77,7 +76,7 @@ namespace WpfIotSimulatorApp.Views
             GearEnd.RenderTransform = rt;
             GearEnd.RenderTransformOrigin = new Point(0.5, 0.5);
 
-            // Window IOCP 콜백기반의 비동기 작업.
+            // Window 콜백기반의 비동기 작업.
             da.Completed += (s, e) =>
             {
                 StartSensorCheck(); // 애니메이션 끝난 후 실행
