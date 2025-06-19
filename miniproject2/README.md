@@ -102,6 +102,7 @@ ERD
 4. Config.json 파일, 설정파일 로드 클래스 작업
 5. 구독 결과
 
+    https://github.com/user-attachments/assets/326e7a14-7dd6-4fb4-88b7-c24d4da48647
 
 ##### WPF 공정관리 앱 개발
 - 기본적인 DB관리 앱 + 실시간 공정 모니터링 + 리포트 시각화
