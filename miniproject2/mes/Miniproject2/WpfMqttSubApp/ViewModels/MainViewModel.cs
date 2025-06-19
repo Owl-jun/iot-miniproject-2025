@@ -35,10 +35,11 @@ namespace WpfMqttSubApp.ViewModels
         public MainViewModel(IDialogCoordinator coordinator)
         {
             this.dialogCoordinator = coordinator;
-            BrokerHost = "210.119.12.52";
-            DatabaseHost = "210.119.12.52";
-            _mqttTopic = "pknu/황달쌤/data";
-            _clientId = "MesMqttSub";
+            BrokerHost = App.Config.mqttConf.broker;
+            DatabaseHost = App.Config.dbConf.Server;
+            _mqttTopic = App.Config.mqttConf.Topic;
+            _clientId = App.Config.mqttConf.ClientId;
+
             connection = new MySqlConnection();  // 예외처리용 
 
             // RichTextBox 테스트용. 
@@ -181,7 +182,7 @@ namespace WpfMqttSubApp.ViewModels
                 return;
             }
 
-            connString = $"Server={DatabaseHost};Database=miniproject;Uid=root;Pwd=root;Charset=utf8";
+            connString = $"Server={DatabaseHost};Database={App.Config.dbConf.Database};Uid={App.Config.dbConf.UserId};Pwd={App.Config.dbConf.Password};Charset=utf8";
 
             await ConnectDatabaseServer();
         }
