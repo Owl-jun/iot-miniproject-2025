@@ -30,8 +30,8 @@ namespace WpfIotSimulatorApp.ViewModels
         public MainViewModel()
         {
             brokerHost = "210.119.12.82";
-            mqttTopic = "pknu/sf82/data";
-            clientId = "황달쌤";
+            mqttTopic = "pknu/황달쌤/data";
+            clientId = "IoT77";
             LogText = "init";
             logNum = 1;
             InitMqttClient();
@@ -86,6 +86,7 @@ namespace WpfIotSimulatorApp.ViewModels
             {
                 ClientId = clientId,
                 Timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                //Result = "훠훠훠훠"
                 Result = resultText
             };
             var message = new MqttApplicationMessageBuilder()

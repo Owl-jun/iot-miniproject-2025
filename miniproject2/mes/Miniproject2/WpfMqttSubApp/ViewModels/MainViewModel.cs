@@ -17,13 +17,17 @@ namespace WpfMqttSubApp.ViewModels
         private readonly IDialogCoordinator dialogCoordinator;
         private readonly DispatcherTimer timer;
         private int lineCounter = 1;  // TODO : 나중에 텍스트가 너무 많아져서 느려지면 초기화시 사용
-
+        private TotalConfig tc;
         private string connString = string.Empty;
         private MySqlConnection connection;
+
+
 
         private string _brokerHost;
         private string _databaseHost;
         private string _logText;
+        private string _mqttTopic;
+        private string _clientId;
 
         // 속성 BrokerHost, DatabaseHost
         // 메서드 ConnectBrokerCommand, ConnectDatabaseCommand       
@@ -31,10 +35,10 @@ namespace WpfMqttSubApp.ViewModels
         public MainViewModel(IDialogCoordinator coordinator)
         {
             this.dialogCoordinator = coordinator;
-
             BrokerHost = "210.119.12.52";
             DatabaseHost = "210.119.12.52";
-
+            _mqttTopic = "pknu/황달쌤/data";
+            _clientId = "MesMqttSub";
             connection = new MySqlConnection();  // 예외처리용 
 
             // RichTextBox 테스트용. 
@@ -75,6 +79,7 @@ namespace WpfMqttSubApp.ViewModels
             // MQTT 클라이언트접속 설정
             var mqttClientOptions = new MqttClientOptionsBuilder()
                 .WithTcpServer(BrokerHost)
+                .WithClientId(_clientId)
                 .WithCleanSession(true)
                 .Build();
             // MQTT 접속 후 이벤트처리
@@ -82,7 +87,7 @@ namespace WpfMqttSubApp.ViewModels
             {
                 LogText += "MQTT 브로커 접속성공!\n";
                 // 연결 이후 구독(Subscribe)
-                await mqttClient.SubscribeAsync("smarthome/52/topic");
+                await mqttClient.SubscribeAsync(_mqttTopic);
             };
             // MQTT 구독메시지 로그출력
             mqttClient.ApplicationMessageReceivedAsync += e =>
@@ -91,10 +96,10 @@ namespace WpfMqttSubApp.ViewModels
                 var payload = e.ApplicationMessage.ConvertPayloadToString(); // byte 데이터를 UTF-8 문자열로 변환
 
                 // json으로 변경
-                var data = JsonConvert.DeserializeObject<FakeInfo>(payload);
-                Debug.WriteLine($"{data.Count} / {data.Sensing_Dt} / {data.Light} / {data.Humid} / {data.Human}");
+                var data = JsonConvert.DeserializeObject<CheckResult>(payload);
+                Debug.WriteLine($"{data.ClientId} / {data.Timestamp} / {data.Result}");
 
-                SaveSensingData(data);
+                //SaveSensingData(data);
 
                 LogText += $"LINENUMBER : {lineCounter++}\n";
                 LogText += $"{payload}\n";
@@ -176,7 +181,7 @@ namespace WpfMqttSubApp.ViewModels
                 return;
             }
 
-            connString = $"Server={DatabaseHost};Database=smarthome;Uid=root;Pwd=12345;Charset=utf8";
+            connString = $"Server={DatabaseHost};Database=miniproject;Uid=root;Pwd=root;Charset=utf8";
 
             await ConnectDatabaseServer();
         }

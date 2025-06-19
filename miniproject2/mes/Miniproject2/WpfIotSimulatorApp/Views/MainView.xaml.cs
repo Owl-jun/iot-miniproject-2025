@@ -45,7 +45,7 @@ namespace WpfIotSimulatorApp.Views
                     isEnd = true;
                     if (DataContext is MainViewModel vm)
                     {
-                        vm.AnimationCompleted?.Invoke(); // ✅ 여기서 신호를 줘야 WaitFor가 끝남
+                        vm.AnimationCompleted?.Invoke(); 
                     }
                 });
                 SortingSensor.BeginAnimation(OpacityProperty, sa);

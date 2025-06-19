@@ -503,3 +503,5 @@ cython_debug/
 *.log
 *.bak
 *.tmp
+
+config.json
