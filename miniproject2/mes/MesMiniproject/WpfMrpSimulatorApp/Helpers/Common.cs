@@ -9,7 +9,7 @@ namespace WpfMrpSimulatorApp.Helpers
     public static class Common
     {
         // DB연결 문자열
-        public static readonly string CONNSTR = "Server=localhost;Database=miniproject;Uid=root;Password=12345;Charset=utf8";
+        public static readonly string CONNSTR = "Server=localhost;Database=miniproject;Uid=root;Password=root;Charset=utf8";
 
         // MahApps.Metro 다이얼로그 코디네이터(MVVM에서 사용하기 위해서)
         public static IDialogCoordinator DIALOGCOORDINATOR;
