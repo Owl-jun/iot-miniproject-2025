@@ -21,8 +21,8 @@ namespace WpfMrpSimulatorApp.ViewModels
         private DateTime? _regDt;
         private DateTime? _modDt;
 
-        private List<Schedule> _schedules;
-        private Schedule _selectedSchedule;
+        private List<ScheduleDto> _schedules;
+        private ScheduleDto _selectedSchedule;
         private bool _isUpdate;
 
         private bool _canSave;
@@ -51,13 +51,13 @@ namespace WpfMrpSimulatorApp.ViewModels
         }
 
         // View와 연동될 데이터/컬렉션
-        public List<Schedule> Schedules
+        public List<ScheduleDto> Schedules
         {
             get => _schedules;
             set => SetProperty(ref _schedules, value);
         }
 
-        public Schedule SelectedSchedule
+        public ScheduleDto SelectedSchedule
         {
             get => _selectedSchedule;
             set { 
@@ -102,7 +102,36 @@ namespace WpfMrpSimulatorApp.ViewModels
         {
             try
             {
-                Schedules = ioTDbContext.Schedules.ToList();
+                using (var db = new IoTDbContext())
+                {
+                    var results = db.Schedules
+                                    .Join(
+                                        db.Settings,
+                                        sch => sch.PlantCode,
+                                        setting => setting.BasicCode,
+                                        (sch, setting1) => new { sch, setting1 }
+                                         )
+                                    .Join(db.Settings,
+                                        temp => temp.sch.SchFacilityId,
+                                        setting2 => setting2.BasicCode,
+                                        (temp, setting2) => new ScheduleDto
+                                        {
+                                            SchIdx = temp.sch.SchIdx,
+                                            PlantCode = temp.sch.PlantCode,
+                                            PlantName = temp.setting1.CodeName,
+                                            SchDate = temp.sch.SchDate,
+                                            LoadTime = temp.sch.LoadTime,
+                                            SchStartTime = temp.sch.SchStartTime,
+                                            SchEntTime = temp.sch.SchEntTime,
+                                            SchFacilityId = temp.sch.SchFacilityId,
+                                            SchFacilityName = setting2.CodeName,
+                                            SchAmount = temp.sch.SchAmount,
+                                            RegDt = temp.sch.RegDt,
+                                            ModDt = temp.sch.ModDt
+                                        }
+                                        );
+                    Schedules = results.ToList();
+                }
             }
             catch (Exception ex)
             {
@@ -113,7 +142,7 @@ namespace WpfMrpSimulatorApp.ViewModels
 
         private void InitVariable()
         {
-            SelectedSchedule = new Schedule();
+            SelectedSchedule = new ScheduleDto();
             // IsUpdate가 False면 신규, True면 수정
             IsUpdate = false;
         }
