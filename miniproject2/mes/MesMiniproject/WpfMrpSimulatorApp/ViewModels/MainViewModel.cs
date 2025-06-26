@@ -13,6 +13,7 @@ namespace WpfMrpSimulatorApp.ViewModels
     {
         // 다이얼로그 코디네이터 변수 선언
         private readonly IDialogCoordinator dialogCoordinator;
+
         private string _greeting;
         private UserControl _currentView;
 
@@ -66,6 +67,18 @@ namespace WpfMrpSimulatorApp.ViewModels
         {
             var viewModel = new ScheduleViewModel(Common.DIALOGCOORDINATOR);
             var view = new ScheduleView
+            {
+                DataContext = viewModel,
+            };
+
+            CurrentView = view;
+        }
+
+        [RelayCommand]
+        public void GetMonitoring()
+        {
+            var viewModel = new MonitoringViewModel(Common.DIALOGCOORDINATOR);
+            var view = new MonitoringView
             {
                 DataContext = viewModel,
             };
